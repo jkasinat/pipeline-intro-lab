@@ -9,13 +9,16 @@ pipeline {
 
     stage('Fluffy Test') {
       steps {
-        echo 'Test Stage'
+        sh '''echo Slepping for 5 secs...
+sleep 5
+echo I wokeup'''
       }
     }
 
     stage('Fluffy Deploy') {
       steps {
         echo 'Final Deployment'
+        sh 'echo Deployment is done.'
       }
     }
 
