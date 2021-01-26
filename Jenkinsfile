@@ -1,56 +1,22 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('Example') {
       steps {
-        sh './jenkins/build.sh'
-        archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
+        echo "Hello ${params.PERSON}"
+        echo "Biography: ${params.BIOGRAPHY}"
+        echo "Toggle: ${params.TOGGLE}"
+        echo "Choice: ${params.CHOICE}"
+        echo "Password: ${params.PASSWORD}"
       }
     }
 
-    stage('Test') {
-      parallel {
-        stage('Test') {
-          steps {
-            sh './jenkins/test-all.sh'
-            junit 'target/**/TEST*.xml'
-          }
-        }
-
-        stage('Backend') {
-          steps {
-            sh './jenkins/test-backend.sh'
-            junit 'target/surefire-reports/**/TEST*.xml'
-          }
-        }
-
-        stage('Frontend') {
-          steps {
-            sh './jenkins/test-frontend.sh'
-            junit 'target/test-results/**/TEST*.xml'
-          }
-        }
-
-        stage('Performance') {
-          steps {
-            sh './jenkins/test-performance.sh'
-          }
-        }
-
-        stage('Static ') {
-          steps {
-            sh './jenkins/test-static.sh'
-          }
-        }
-
-      }
-    }
-
-    stage('Deploy') {
-      steps {
-        sh './jenkins/deploy.sh staging'
-      }
-    }
-
+  }
+  parameters {
+    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+    text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+    booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
+    choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+    password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
   }
 }
